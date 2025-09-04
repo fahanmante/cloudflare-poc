@@ -8,8 +8,8 @@ const DotLottiePlayerAnimation = () => {
         "https://lottie.host/863f36c0-f4d7-4ba3-a87f-262a214ba7d6/HZdnggOmdW.lottie"
       }
       style={{
-        height: 250,
-        width: 250,
+        height: 350,
+        width: 350,
       }}
       loop
     />

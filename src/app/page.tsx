@@ -1,6 +1,6 @@
 import DotLottiePlayerAnimation from "@/components/DotLottiePlay";
 import Image from "next/image";
-import BG_IMG from "./bg_img.jpg";
+import BG_IMG from "./bg_img.png";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-16 p-24">

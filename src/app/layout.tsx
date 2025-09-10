@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: "NextJS and Cloudflare CDN POC",
 };
 
+export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 export default function RootLayout({

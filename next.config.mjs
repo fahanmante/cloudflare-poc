@@ -46,7 +46,7 @@ const nextConfig = {
             },
             // Public folder assets (images, favicon, etc.)
             {
-                source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|css|js|woff2|ttf)',
+                source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|css|js|woff2|ttf|lottie)',
                 headers: [
                     { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
                     { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },

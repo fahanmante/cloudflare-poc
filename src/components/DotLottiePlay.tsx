@@ -6,7 +6,7 @@ const DotLottiePlayerAnimation = () => {
     <div className="flex flex-row gap-5">
       {/* taking path from public folder or locally served */}
       <DotLottiePlayer
-        src="/lotties/sample.lottie"
+        src="/lotties/onesample.lottie"
         style={{
           height: 350,
           width: 350,

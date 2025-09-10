@@ -12,18 +12,49 @@ const nextConfig = {
             },
         ],
     },
+    // async headers() {
+    //     return [
+    //         {
+    //             source: '/:path*', // match all routes and assets
+    //             headers: [
+    //                 { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
+    //                 { key: 'Pragma', value: 'no-cache' },
+    //                 { key: 'Expires', value: '0' },
+    //             ],
+    //         },
+    //     ];
+    // },
     async headers() {
         return [
+            // HTML pages & API routes
             {
-                source: '/:path*', // match all routes and assets
+                source: '/:path*',
                 headers: [
-                    { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
-                    { key: 'Pragma', value: 'no-cache' },
-                    { key: 'Expires', value: '0' },
+                    // Cloudflare & browsers: cache for 1 hour
+                    { key: 'Cache-Control', value: 'public, max-age=3600' },
+                    // Disable Vercel CDN cache
+                    { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
+                ],
+            },
+            // Next.js build assets (_next/static/*)
+            {
+                source: '/_next/static/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=3600' },
+                    { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
+                ],
+            },
+            // Public folder assets (images, favicon, etc.)
+            {
+                source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|css|js|woff2|ttf)',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=3600' },
+                    { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
                 ],
             },
         ];
     },
+
 
 };
 

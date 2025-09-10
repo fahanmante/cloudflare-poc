@@ -1,0 +1,17 @@
+{
+    "headers": [
+        {
+            "source": "/(.*)\\.(lottie|svg|jpg|jpeg|png|gif|ico|webp|avif|css|js|woff2|ttf)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=3600"
+                },
+                {
+                    "key": "Vercel-CDN-Cache-Control",
+                    "value": "no-store"
+                }
+            ]
+        }
+    ]
+}

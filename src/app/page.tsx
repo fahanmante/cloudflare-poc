@@ -1,6 +1,7 @@
 import DotLottiePlayerAnimation from "@/components/DotLottiePlay";
 import Image from "next/image";
 import BG_IMG from "./bg_img.png";
+import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-16 p-24">
@@ -21,6 +22,9 @@ export default function Home() {
         alt="Background Image"
         className="rounded-lg shadow-lg absolute top-0 left-0 w-full h-full object-cover -z-10 opacity-50"
       />
+      <Link href="/about-us" className="text-blue-500 underline">
+        Go to About Us Page
+      </Link>
     </main>
   );
 }

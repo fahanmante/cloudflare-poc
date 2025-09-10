@@ -30,8 +30,6 @@ const nextConfig = {
             {
                 source: '/:path*',
                 headers: [
-                    // Cloudflare & browsers: cache for 1 hour
-                    { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
                     // Disable Vercel CDN cache
                     { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
                 ],
@@ -40,7 +38,6 @@ const nextConfig = {
             {
                 source: '/_next/static/:path*',
                 headers: [
-                    { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
                     { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
                 ],
             },
@@ -48,7 +45,6 @@ const nextConfig = {
             {
                 source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|css|js|woff2|ttf|lottie)',
                 headers: [
-                    { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
                     { key: 'Vercel-CDN-Cache-Control', value: 'no-store' },
                 ],
             },

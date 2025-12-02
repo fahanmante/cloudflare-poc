@@ -12,6 +12,14 @@ export default function Home() {
         <h1 className="text-5xl">Stutify App</h1>
         <h2 className="text-3xl">A Cloudflare POC</h2>
       </div>
+      <div className="flex gap-5">
+        <Link href="/about-us" className="text-blue-500 underline">
+          Go to About Us Page
+        </Link>
+        <Link href="/contact-us" className="text-blue-500 underline">
+          Contact Us
+        </Link>
+      </div>
       <DotLottiePlayerAnimation />
       <Image
         src="https://shift-boolean-dev.s3.ap-south-1.amazonaws.com/public/Future_Of_Web_Development_355c2adc14.webp"
@@ -25,9 +33,6 @@ export default function Home() {
         alt="Background Image"
         className="rounded-lg shadow-lg absolute top-0 left-0 w-full h-full object-cover -z-10 opacity-50"
       />
-      <Link href="/about-us" className="text-blue-500 underline">
-        Go to About Us Page
-      </Link>
     </main>
   );
 }

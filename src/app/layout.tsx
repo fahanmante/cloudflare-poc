@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import Script from "next/script";
+import ClaritySetup from "@/components/ClaritySetup";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      {/* <head>
         {process.env.NEXT_PUBLIC_CLARITY_ID ? (
-          <Script type="text/javascript" id="microsfot_claritys_script">
+          <Script type="text/javascript" id="ms_clarity">
             {`(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -31,9 +32,10 @@ export default function RootLayout({
               })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_ID}");`}
           </Script>
         ) : null}
-      </head>
+      </head> */}
       <body className={inter.className}>
         {children}
+        <ClaritySetup />
         {process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ? (
           <GoogleTagManager
             gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER}

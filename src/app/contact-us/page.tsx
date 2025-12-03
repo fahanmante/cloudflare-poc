@@ -1,5 +1,9 @@
 import ContactForm from "@/components/ContactForm";
 
+export const metadata = {
+  title: "Constact Us",
+};
+
 export default function ContactUsPage() {
   return (
     <div className="flex flex-col grow gap-5 w-full h-screen items-center justify-center">

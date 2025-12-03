@@ -2,6 +2,10 @@ import Link from "next/link";
 
 export const fetchCache = "force-no-store";
 
+export const metadata = {
+  title: "About Us",
+};
+
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-16 p-24">

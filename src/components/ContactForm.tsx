@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
 import Link from "next/link";
+import Clarity from "@microsoft/clarity";
 
 export default function ContactForm() {
   const [form, setForm] = useState({
@@ -28,6 +29,8 @@ export default function ContactForm() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     sendGTMEvent({ event: "form_submit", form_name: "contact-us" });
+    window?.clarity("event", "");
+    Clarity.setTag("form_submit", "contact_us");
     setIsSubmitted(true);
     console.log("Form submitted:", form);
   };
@@ -35,15 +38,17 @@ export default function ContactForm() {
   useEffect(() => {
     if (isDirty) {
       sendGTMEvent({ event: "form_start", form_name: "contact-us" });
+      Clarity.setTag("form_start", "contact_us");
     }
 
     return () => {
       if (isDirty && !isSubmitted) {
         sendGTMEvent({ event: "form_abandon", form_name: "contact-us" });
+        Clarity.setTag("form_abandon", "contact_us");
       }
     };
   }, [isDirty, isSubmitted]);
-
+  console.log("here::", Clarity);
   return (
     <form
       onSubmit={handleSubmit}

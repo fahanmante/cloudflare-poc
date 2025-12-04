@@ -71,9 +71,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className={`p-2 rounded text-white ${
-          isDisabled ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-        }`}
+        className={"p-2 rounded text-white bg-blue-600 hover:bg-blue-700"}
       >
         Submit
       </button>

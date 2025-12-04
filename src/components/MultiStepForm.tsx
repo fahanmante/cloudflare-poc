@@ -3,6 +3,7 @@ import { sendGTMEvent } from "@next/third-parties/google";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Clarity from "@microsoft/clarity";
+import { sendClarityEvent, sendClarityTag } from "../utils/clarityHelper";
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
@@ -23,22 +24,25 @@ const MultiStepForm = () => {
   });
   const formData = watch();
 
-  const nextStep = () => {
+  const nextStepAnalytics = (nextStep: number) => {
     sendGTMEvent({
       event: "form_step",
-      step_number: step + 1,
+      step_number: nextStep,
       form_name: "meet-us",
     });
-    Clarity.setTag("form_step", ["meet-us", `${step + 1}`]);
-    setStep((prev) => prev + 1);
+    sendClarityTag("form_step", ["meet-us", `${nextStep}`]);
+    sendClarityEvent(`meet_us_form_step_${nextStep}`);
   };
-  const prevStep = () => {
-    sendGTMEvent({
-      event: "form_step",
-      step_number: step - 1,
-      form_name: "meet-us",
+
+  const nextStep = () => {
+    setStep((prev) => {
+      const nextStep = prev + 1;
+      nextStepAnalytics(nextStep);
+      return nextStep;
     });
-    Clarity.setTag("form_step", ["meet-us", `${step - 1}`]);
+  };
+
+  const prevStep = () => {
     setStep((prev) => prev - 1);
   };
 
@@ -49,7 +53,8 @@ const MultiStepForm = () => {
         form_name: "meet-us",
         step_number: 1,
       });
-      Clarity.setTag("form_start", ["meet-us", "1"]);
+      sendClarityTag("form_start", ["meet-us", "1"]);
+      sendClarityEvent("meet_us_form_start");
     }
   }, [isDirty]);
 
@@ -60,7 +65,8 @@ const MultiStepForm = () => {
       form_name: "meet-us",
       step_number: step,
     });
-    Clarity.setTag("form_submit", ["meet-us", `${step}`]);
+    sendClarityTag("form_submit", ["meet-us", `${step}`]);
+    sendClarityEvent("meet_us_form_submit");
     alert("Form submitted! 🎉\n" + JSON.stringify(data, null, 2));
   };
 

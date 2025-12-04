@@ -1,89 +1,76 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
 import Link from "next/link";
-import Clarity from "@microsoft/clarity";
+import { useForm } from "react-hook-form";
+import { sendClarityEvent, sendClarityTag } from "@/utils/clarityHelper";
 
 export default function ContactForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, isSubmitted },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
   });
 
-  const [isDirty, setIsDirty] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const isDisabled = !form.name || !form.email || !form.message;
-
-  const handleChange = (e: any) => {
-    if (isDirty === false) {
-      setIsDirty(true);
-    }
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e: any) => {
+  const onSubmit = (data: any, e: any) => {
     e.preventDefault();
     sendGTMEvent({ event: "form_submit", form_name: "contact-us" });
     window?.clarity("event", "");
-    Clarity.setTag("form_submit", "contact_us");
-    setIsSubmitted(true);
-    console.log("Form submitted:", form);
+    sendClarityTag("form_submit", "contact_us");
+    sendClarityEvent("contact_us_form_submit");
+    console.log("Form submitted:", data);
   };
 
   useEffect(() => {
     if (isDirty) {
       sendGTMEvent({ event: "form_start", form_name: "contact-us" });
-      Clarity.setTag("form_start", "contact_us");
+      sendClarityTag("form_start", "contact_us");
+      sendClarityEvent("contact_us_form_start");
     }
 
     return () => {
       if (isDirty && !isSubmitted) {
         sendGTMEvent({ event: "form_abandon", form_name: "contact-us" });
-        Clarity.setTag("form_abandon", "contact_us");
+        sendClarityTag("form_abandon", "contact_us");
+        sendClarityEvent("contact_us_form_abandon");
       }
     };
   }, [isDirty, isSubmitted]);
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-3 w-full max-w-sm"
     >
       <input
         type="text"
-        name="name"
         placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
+        {...register("name")}
         className="border p-2 rounded text-black"
       />
 
       <input
         type="email"
-        name="email"
+        {...register("email")}
         placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
         className="border p-2 rounded text-black"
       />
 
       <textarea
-        name="message"
         placeholder="Message"
-        value={form.message}
-        onChange={handleChange}
+        {...register("message")}
         className="border p-2 rounded text-black"
         rows={4}
       />
 
       <button
         type="submit"
-        disabled={isDisabled}
         className={`p-2 rounded text-white ${
           isDisabled ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
         }`}

@@ -19,6 +19,9 @@ export default function Home() {
         <Link href="/contact-us" className="text-blue-500 underline">
           Contact Us
         </Link>
+        <Link href="/meet-us" className="text-blue-500 underline">
+          Meet Us
+        </Link>
       </div>
       <DotLottiePlayerAnimation />
       <Image

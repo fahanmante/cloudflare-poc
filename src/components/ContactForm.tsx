@@ -48,7 +48,7 @@ export default function ContactForm() {
       }
     };
   }, [isDirty, isSubmitted]);
-  console.log("here::", Clarity);
+
   return (
     <form
       onSubmit={handleSubmit}

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ export default function ContactForm() {
   const {
     register,
     handleSubmit,
-    formState: { isDirty, isSubmitted },
+    formState: { isDirty },
   } = useForm({
     defaultValues: {
       name: "",
@@ -18,10 +18,11 @@ export default function ContactForm() {
     },
   });
 
+  const startedFields = useRef<Set<string>>(new Set());
+
   const onSubmit = (data: any, e: any) => {
     e.preventDefault();
-    sendGTMEvent({ event: "form_submit", form_name: "contact-us" });
-    window?.clarity("event", "");
+    sendGTMEvent({ event: "form_submit", form_name: "contact_us" });
     sendClarityTag("form_submit", "contact_us");
     sendClarityEvent("contact_us_form_submit");
     console.log("Form submitted:", data);
@@ -29,19 +30,22 @@ export default function ContactForm() {
 
   useEffect(() => {
     if (isDirty) {
-      sendGTMEvent({ event: "form_start", form_name: "contact-us" });
+      sendGTMEvent({ event: "form_start", form_name: "contact_us" });
       sendClarityTag("form_start", "contact_us");
       sendClarityEvent("contact_us_form_start");
     }
+  }, [isDirty]);
 
-    return () => {
-      if (isDirty && !isSubmitted) {
-        sendGTMEvent({ event: "form_abandon", form_name: "contact-us" });
-        sendClarityTag("form_abandon", "contact_us");
-        sendClarityEvent("contact_us_form_abandon");
-      }
-    };
-  }, [isDirty, isSubmitted]);
+  const trackFieldStart = (fieldName: string, value: any) => {
+    if (!startedFields.current.has(fieldName) && value && value !== "") {
+      startedFields.current.add(fieldName);
+      sendGTMEvent({
+        event: "form_field_start",
+        form_name: "contact_us",
+        field_name: fieldName,
+      });
+    }
+  };
 
   return (
     <form
@@ -51,20 +55,32 @@ export default function ContactForm() {
       <input
         type="text"
         placeholder="Name"
-        {...register("name")}
+        {...register("name", {
+          onChange: (event: ChangeEvent<HTMLInputElement>) => {
+            trackFieldStart("name", event?.target?.value);
+          },
+        })}
         className="border p-2 rounded text-black"
       />
 
       <input
         type="email"
-        {...register("email")}
+        {...register("email", {
+          onChange: (event: ChangeEvent<HTMLInputElement>) => {
+            trackFieldStart("email", event?.target?.value);
+          },
+        })}
         placeholder="Email"
         className="border p-2 rounded text-black"
       />
 
       <textarea
         placeholder="Message"
-        {...register("message")}
+        {...register("message", {
+          onChange: (event: ChangeEvent<HTMLInputElement>) => {
+            trackFieldStart("message", event?.target?.value);
+          },
+        })}
         className="border p-2 rounded text-black"
         rows={4}
       />

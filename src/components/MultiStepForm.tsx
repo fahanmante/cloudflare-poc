@@ -1,8 +1,7 @@
 "use client"; // for Next.js App Router (if using)
 import { sendGTMEvent } from "@next/third-parties/google";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import Clarity from "@microsoft/clarity";
 import { sendClarityEvent, sendClarityTag } from "../utils/clarityHelper";
 
 const MultiStepForm = () => {
@@ -11,7 +10,7 @@ const MultiStepForm = () => {
     register,
     watch,
     handleSubmit,
-    formState: { isDirty, isSubmitted },
+    formState: { isDirty },
   } = useForm<any>({
     defaultValues: {
       firstName: "",
@@ -23,6 +22,7 @@ const MultiStepForm = () => {
     },
   });
   const formData = watch();
+  const startedFields = useRef<Set<string>>(new Set());
 
   const nextStepAnalytics = (nextStep: number) => {
     sendGTMEvent({
@@ -67,7 +67,6 @@ const MultiStepForm = () => {
     });
     sendClarityTag("form_submit", ["meet-us", `${step}`]);
     sendClarityEvent("meet_us_form_submit");
-    alert("Form submitted! 🎉\n" + JSON.stringify(data, null, 2));
   };
 
   const getDisbaledValue = () => {
@@ -81,6 +80,19 @@ const MultiStepForm = () => {
     return false;
   };
 
+  const trackFieldStart = (fieldName: string, value: any) => {
+    if (!startedFields.current.has(fieldName) && value && value !== "") {
+      startedFields.current.add(fieldName);
+      console.log("here::", fieldName, value);
+      sendGTMEvent({
+        event: "form_field_start",
+        form_name: "meet-us",
+        field_name: fieldName,
+        step_number: step,
+      });
+    }
+  };
+
   return (
     <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px" }}>
       <h2>Step {step} of 4</h2>
@@ -90,14 +102,24 @@ const MultiStepForm = () => {
             <label>First Name</label>
             <input
               type="text"
-              {...register("firstName", { required: true })}
+              {...register("firstName", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("firstName", event?.target?.value);
+                },
+              })}
               required
               className="border p-2 rounded text-black"
             />
             <label>Last Name</label>
             <input
               type="text"
-              {...register("lastName", { required: true })}
+              {...register("lastName", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("lastName", event?.target?.value);
+                },
+              })}
               required
               className="border p-2 rounded text-black"
             />
@@ -109,14 +131,24 @@ const MultiStepForm = () => {
             <label>Email Address</label>
             <input
               type="email"
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("email", event?.target?.value);
+                },
+              })}
               required
               className="border p-2 rounded text-black"
             />
             <label>Alternative Email</label>
             <input
               type="email"
-              {...register("altEmail", { required: true })}
+              {...register("altEmail", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("altEmail", event?.target?.value);
+                },
+              })}
               className="border p-2 rounded text-black"
             />
           </div>
@@ -127,12 +159,22 @@ const MultiStepForm = () => {
             <label>Phone Number</label>
             <input
               type="tel"
-              {...register("phone", { required: true })}
+              {...register("phone", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("phone", event?.target?.value);
+                },
+              })}
               className="border p-2 rounded text-black"
             />
             <label>Address</label>
             <textarea
-              {...register("address", { required: true })}
+              {...register("address", {
+                required: true,
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  trackFieldStart("address", event?.target?.value);
+                },
+              })}
               required
               className="border p-2 rounded text-black"
             />

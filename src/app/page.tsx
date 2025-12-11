@@ -2,6 +2,7 @@ import DotLottiePlayerAnimation from "@/components/DotLottiePlay";
 import Image from "next/image";
 import BG_IMG from "./bg_img.png";
 import Link from "next/link";
+import UserList from "@/components/UserList";
 
 export const fetchCache = "force-no-store";
 
@@ -23,14 +24,15 @@ export default function Home() {
           Meet Us
         </Link>
       </div>
-      <DotLottiePlayerAnimation />
+      <UserList />
+      {/* <DotLottiePlayerAnimation />
       <Image
         src="https://shift-boolean-dev.s3.ap-south-1.amazonaws.com/public/Future_Of_Web_Development_355c2adc14.webp"
         alt="Deer Image"
         className="rounded-lg shadow-lg"
         width={200}
         height={200}
-      />
+      />*/}
       <Image
         src={BG_IMG}
         alt="Background Image"

@@ -1,17 +1,5 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 
-// const withPWA = withPWAInit({
-//     dest: "public",
-//     cacheOnFrontEndNav: true,
-//     aggressiveFrontEndNavCaching: true,
-//     reloadOnOnline: true,
-//     disable: false,
-//     extendDefaultRuntimeCaching: true,
-//     workboxOptions: {
-//         disableDevLogs: true
-//     }
-// });
-
 const withPWA = withPWAInit({
     dest: "public",
     cacheOnFrontEndNav: true,
@@ -21,16 +9,40 @@ const withPWA = withPWAInit({
     extendDefaultRuntimeCaching: true,
     workboxOptions: {
         disableDevLogs: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        additionalManifestEntries: [
+            { url: "/about-us", revision: null },
+            { url: "/meet-us", revision: null },
+        ],
         runtimeCaching: [
             {
-                // Cache Next.js static assets (CSS/JS chunks)
-                urlPattern: /^\/_next\/static\/.*/i,
-                handler: "CacheFirst",
+                // ✅ Cache JSONPlaceholder users API
+                urlPattern: /^https:\/\/jsonplaceholder\.typicode\.com\/users/i,
+                handler: "CacheFirst", // or StaleWhileRevalidate depending on freshness needs
                 options: {
-                    cacheName: "next-static-assets",
+                    cacheName: "users-api-cache",
                     expiration: {
-                        maxEntries: 100,
-                        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+                        maxEntries: 10,
+                        maxAgeSeconds: 24 * 60 * 60, // 1 day
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200], // cache successful responses
+                    },
+                },
+            },
+            {
+                // Cache Next.js CSS chunks
+                urlPattern: /^\/_next\/static\/css\/.*\.css$/i,
+                handler: "StaleWhileRevalidate",
+                options: {
+                    cacheName: "next-css-cache",
+                    expiration: {
+                        maxEntries: 20,
+                        maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
                     },
                 },
             },
@@ -47,7 +59,7 @@ const withPWA = withPWAInit({
                 },
             },
             {
-                // ✅ This brings back visited page caching
+                // This brings back visited page caching
                 urlPattern: ({ request }) => request.destination === "document",
                 handler: "NetworkFirst",
                 options: {
